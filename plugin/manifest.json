@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "mrmoe.outlook-calendar",
+  "name": "Work Calendar",
+  "version": "1.0.0",
+  "author": "mrmoe",
+  "description": "Next Outlook event in the bar, with an upcoming-events popup",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Work Calendar",
+    "description": "Next Outlook event, with an upcoming-events popup",
+    "category": "Info",
+    "allowMultiple": false
+  }
+}
