@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ID="mrmoe.ics-calendar"
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/plugin"
+SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="$HOME/.config/omarchy/plugins/$ID"
 SETTINGS="$HOME/.local/state/omarchy/settings/ics-calendar.json"
 
@@ -16,7 +16,7 @@ if [[ "${1:-}" == "--uninstall" ]]; then
 fi
 
 mkdir -p "$DEST"
-cp "$SRC"/* "$DEST"/
+cp "$SRC"/{BarWidget.qml,Panel.qml,Model.js,manifest.json} "$DEST"/
 echo "Installed plugin to $DEST"
 
 if [[ ! -f "$SETTINGS" ]]; then

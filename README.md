@@ -15,10 +15,15 @@ which suits work calendars where IT won't let you register apps. If you want
 two-way sync, Google/CalDAV accounts, or a month grid, other Omarchy calendar
 plugins do more.
 
-![ICS Calendar in the Omarchy bar](screenshot.png)
+![ICS Calendar in the Omarchy bar](preview.png)
 
 Built for Outlook / Office 365 "publish calendar" feeds, but it should work with
 any standard `.ics` feed (Google Calendar's "secret address in iCal format", etc.).
+
+## Requirements
+
+- Omarchy with shell plugin support (the Quattro shell)
+- `curl` (used to download your calendar feed; installed by default on Omarchy)
 
 ## Install
 
