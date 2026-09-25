@@ -11,6 +11,12 @@
 
 var DAY_MS = 24 * 60 * 60 * 1000
 var MAX_OCCURRENCES_PER_RULE = 500
+// The feed is untrusted input, so bound the work a hostile or huge one can
+// cause: events read from the file, occurrences produced from them, and the
+// search for a month that has an Nth weekday.
+var MAX_EVENTS = 5000
+var MAX_OCCURRENCES = 2000
+var MAX_MONTH_SEARCH = 24
 var DOW = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 }
 
 function pad2(n) { return (n < 10 ? "0" : "") + n }
@@ -139,6 +145,7 @@ function parseICS(raw) {
       if (current) {
         var ev = normalizeEvent(current)
         if (ev) events.push(ev)
+        if (events.length >= MAX_EVENTS) break
       }
       current = null
       continue
@@ -288,10 +295,13 @@ function expandRecurrence(startMs, rrule, exdateSet, rangeStartMs, rangeEndMs) {
       targetMonth = ((targetMonth % 12) + 12) % 12
       if (monthlyByday && DOW[monthlyByday[2]] !== undefined) {
         var ordinal = parseInt(monthlyByday[1], 10)
+        if (ordinal === 0 || ordinal > 5 || ordinal < -5) break // not a real ordinal
         var nextByday = nthWeekdayOfMonth(targetYear, targetMonth, DOW[monthlyByday[2]], ordinal, h, mi, se)
+        var monthSearch = 0
         // Ordinal doesn't exist in this month (e.g. a "5th" weekday) — skip
         // to the following month instead of falling back to a wrong date.
         while (!nextByday) {
+          if (++monthSearch > MAX_MONTH_SEARCH) return results
           targetMonth += interval
           targetYear += Math.floor(targetMonth / 12)
           targetMonth = ((targetMonth % 12) + 12) % 12
@@ -330,7 +340,7 @@ function buildOccurrences(events, nowMs, horizonMs) {
   var rangeStart = nowMs - DAY_MS // include today's already-started events
   var occurrences = []
 
-  for (var m = 0; m < masters.length; m++) {
+  for (var m = 0; m < masters.length && occurrences.length < MAX_OCCURRENCES; m++) {
     var master = masters[m]
     var duration = master.endMs - master.startMs
 

@@ -82,10 +82,32 @@ Panel {
     if (root.events.length === 0 || (root.nowMs - root.lastFetchMs) > root.minRefetchGapMs) root.refresh()
   }
 
+  // The feed URL is a secret (it grants read access to the calendar), so it
+  // goes to the script over stdin and to curl over its own stdin as a config
+  // line, never as a process argument that `ps` or /proc/<pid>/cmdline could
+  // show. The download is capped at maxFeedBytes: --max-filesize rejects a
+  // feed that declares a larger size up front, and head -c stops one that
+  // doesn't. Anything over the cap is treated as a failed fetch. Only https
+  // links are fetched (webcal:// is converted), so the secret URL never
+  // travels unencrypted.
+  readonly property int maxFeedBytes: 2 * 1024 * 1024
+  readonly property string fetchScript: [
+    "set -o pipefail; export LC_ALL=C",
+    "IFS= read -r url",
+    "case \"$url\" in webcal://*) url=\"https://${url#webcal://}\" ;; esac",
+    "case \"$url\" in https://*) ;; *) exit 2 ;; esac",
+    "url=${url//\\\\/\\\\\\\\}; url=${url//\\\"/\\\\\\\"}",
+    "data=$(printf 'url = \"%s\"\\n' \"$url\" | curl -fsS --max-time 10 --max-filesize " + maxFeedBytes +
+      " --proto '=https' --proto-redir '=https' -K - | head -c " + (maxFeedBytes + 1) + ") || exit 3",
+    "[ ${#data} -le " + maxFeedBytes + " ] || exit 4",
+    "printf '%s' \"$data\""
+  ].join("\n")
+
   function refresh() {
     if (root.fetching || root.icsUrl === "") return
     root.fetching = true
-    icsProc.command = ["curl", "-fsS", "--max-time", "10", root.icsUrl]
+    icsProc.pendingUrl = root.icsUrl
+    icsProc.command = ["bash", "-c", root.fetchScript]
     icsProc.running = true
   }
 
@@ -113,6 +135,12 @@ Panel {
 
   Process {
     id: icsProc
+    property string pendingUrl: ""
+    stdinEnabled: true
+    onStarted: {
+      write(pendingUrl + "\n")
+      pendingUrl = ""
+    }
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
@@ -215,7 +243,7 @@ Panel {
           visible: root.icsUrl === ""
           width: parent.width
           wrapMode: Text.WordWrap
-          text: "No calendar URL configured.\n\nIn Outlook on the web: Settings → Calendar → Shared calendars → Publish a calendar, then copy the ICS link.\n\nPaste it as \"icsUrl\" in ~/.local/state/omarchy/settings/ics-calendar.json (or re-run install.sh after deleting that file)."
+          text: "No calendar URL configured.\n\nIn Outlook on the web: Settings → Calendar → Shared calendars → Publish a calendar, then copy the ICS link.\n\nPaste it (it must start with https://) as \"icsUrl\" in ~/.local/state/omarchy/settings/ics-calendar.json (or re-run install.sh after deleting that file)."
           color: Qt.darker(root.bar.foreground, 1.4)
           font.family: root.bar.fontFamily
           font.pixelSize: Style.font.bodySmall

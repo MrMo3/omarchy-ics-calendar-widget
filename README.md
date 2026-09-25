@@ -53,6 +53,13 @@ Publish, and copy the **ICS** link.
 > the installer makes readable by you alone. Your organisation may also block
 > publishing calendars, so check with your IT admin.
 
+## Security notes
+
+- Only `https://` calendar links are fetched (`webcal://` links are converted to `https://`).
+- Your link is passed to `curl` over stdin, so it never appears in the process list.
+- Downloads are capped at 2 MB, and the parser limits how many events it will read, so a huge or hostile feed can't exhaust memory or freeze the shell.
+- Event text is shown as plain text only. The widget never opens links or runs anything from your calendar.
+
 ## Limitations
 
 - Timezones: events are treated as being in your machine's local timezone.

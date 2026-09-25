@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "mrmoe.ics-calendar",
   "name": "ICS Calendar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "mrmoe",
   "description": "Next calendar event in the bar, with an upcoming-events popup",
   "kinds": [
