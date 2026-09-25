@@ -1,4 +1,4 @@
-# Omarchy Work Calendar
+# Omarchy ICS Calendar Widget
 
 An [Omarchy](https://omarchy.org) bar widget that shows your next calendar
 event in the top bar, with a popup listing upcoming events.
@@ -9,6 +9,12 @@ event in the top bar, with a popup listing upcoming events.
 - Handles recurring meetings (daily / weekly / monthly / yearly)
 - Read-only and private: it only downloads a calendar feed; nothing is sent anywhere
 
+**How it's different:** deliberately tiny. No login, no API keys, no app
+registration, no background service. You paste one calendar link and that's it,
+which suits work calendars where IT won't let you register apps. If you want
+two-way sync, Google/CalDAV accounts, or a month grid, other Omarchy calendar
+plugins do more.
+
 ![Work Calendar in the Omarchy bar](screenshot.png)
 
 Built for Outlook / Office 365 "publish calendar" feeds, but it should work with
@@ -17,8 +23,8 @@ any standard `.ics` feed (Google Calendar's "secret address in iCal format", etc
 ## Install
 
 ```bash
-git clone https://github.com/MrMo3/omarchy-outlook-calendar
-cd omarchy-outlook-calendar
+git clone https://github.com/MrMo3/omarchy-ics-calendar-widget
+cd omarchy-ics-calendar-widget
 ./install.sh
 ```
 
