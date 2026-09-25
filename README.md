@@ -15,7 +15,7 @@ which suits work calendars where IT won't let you register apps. If you want
 two-way sync, Google/CalDAV accounts, or a month grid, other Omarchy calendar
 plugins do more.
 
-![Work Calendar in the Omarchy bar](screenshot.png)
+![ICS Calendar in the Omarchy bar](screenshot.png)
 
 Built for Outlook / Office 365 "publish calendar" feeds, but it should work with
 any standard `.ics` feed (Google Calendar's "secret address in iCal format", etc.).
@@ -33,7 +33,7 @@ your calendar URL. Then add this to the `right` (or `left`) list of the bar in
 `~/.config/omarchy/shell.json` and restart the shell:
 
 ```json
-{ "id": "mrmoe.outlook-calendar" }
+{ "id": "mrmoe.ics-calendar" }
 ```
 
 ## Getting your calendar URL
@@ -44,7 +44,7 @@ Publish, and copy the **ICS** link.
 
 > **Treat this link like a password.** Anyone with it can read your calendar.
 > Never commit it to Git or post it publicly. It's stored only in
-> `~/.local/state/omarchy/settings/outlook-calendar.json` (`icsUrl` key), which
+> `~/.local/state/omarchy/settings/ics-calendar.json` (`icsUrl` key), which
 > the installer makes readable by you alone. Your organisation may also block
 > publishing calendars, so check with your IT admin.
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Installs (or uninstalls with --uninstall) the Work Calendar bar widget for Omarchy.
+# Installs (or uninstalls with --uninstall) the ICS Calendar bar widget for Omarchy.
 set -euo pipefail
 
-ID="mrmoe.outlook-calendar"
+ID="mrmoe.ics-calendar"
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/plugin"
 DEST="$HOME/.config/omarchy/plugins/$ID"
-SETTINGS="$HOME/.local/state/omarchy/settings/outlook-calendar.json"
+SETTINGS="$HOME/.local/state/omarchy/settings/ics-calendar.json"
 
 if [[ "${1:-}" == "--uninstall" ]]; then
   rm -rf "$DEST"

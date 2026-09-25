@@ -4,7 +4,7 @@ import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "mrmoe.outlook-calendar"
+  moduleName: "mrmoe.ics-calendar"
 
   function injectPanel() {
     var target = panelLoader.item

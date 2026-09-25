@@ -6,13 +6,13 @@ import qs.Ui
 import qs.Commons
 import "Model.js" as Model
 
-// Outlook calendar popup: fetches the account's published .ics feed on a
+// Calendar popup: fetches the published .ics feed on a
 // timer and shows upcoming events grouped by day. See Model.js for the
 // (deliberately partial) iCalendar parsing this relies on.
 Panel {
   id: root
-  moduleName: "mrmoe.outlook-calendar"
-  ipcTarget: "mrmoe.outlook-calendar"
+  moduleName: "mrmoe.ics-calendar"
+  ipcTarget: "mrmoe.ics-calendar"
 
   property var anchorItem: null
   property var hostWidget: null
@@ -91,7 +91,7 @@ Panel {
 
   FileView {
     id: urlFile
-    path: Quickshell.env("HOME") + "/.local/state/omarchy/settings/outlook-calendar.json"
+    path: Quickshell.env("HOME") + "/.local/state/omarchy/settings/ics-calendar.json"
     watchChanges: true
     printErrors: false
     onFileChanged: reload()
@@ -183,7 +183,7 @@ Panel {
             textFormat: Text.PlainText
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            text: "Work Calendar"
+            text: "ICS Calendar"
             color: root.bar.foreground
             font.family: root.bar.fontFamily
             font.pixelSize: Style.font.title
@@ -215,7 +215,7 @@ Panel {
           visible: root.icsUrl === ""
           width: parent.width
           wrapMode: Text.WordWrap
-          text: "No calendar URL configured.\n\nIn Outlook on the web: Settings → Calendar → Shared calendars → Publish a calendar, then copy the ICS link.\n\nPaste it as \"icsUrl\" in ~/.local/state/omarchy/settings/outlook-calendar.json (or re-run install.sh after deleting that file)."
+          text: "No calendar URL configured.\n\nIn Outlook on the web: Settings → Calendar → Shared calendars → Publish a calendar, then copy the ICS link.\n\nPaste it as \"icsUrl\" in ~/.local/state/omarchy/settings/ics-calendar.json (or re-run install.sh after deleting that file)."
           color: Qt.darker(root.bar.foreground, 1.4)
           font.family: root.bar.fontFamily
           font.pixelSize: Style.font.bodySmall
