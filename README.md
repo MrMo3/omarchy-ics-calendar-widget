@@ -9,6 +9,8 @@ event in the top bar, with a popup listing upcoming events.
 - Handles recurring meetings (daily / weekly / monthly / yearly)
 - Read-only and private: it only downloads a calendar feed; nothing is sent anywhere
 
+![Work Calendar in the Omarchy bar](screenshot.png)
+
 Built for Outlook / Office 365 "publish calendar" feeds, but it should work with
 any standard `.ics` feed (Google Calendar's "secret address in iCal format", etc.).
 

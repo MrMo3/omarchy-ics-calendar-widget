@@ -215,7 +215,7 @@ Panel {
           visible: root.icsUrl === ""
           width: parent.width
           wrapMode: Text.WordWrap
-          text: "No calendar URL configured. Set \"icsUrl\" in ~/.local/state/omarchy/settings/outlook-calendar.json."
+          text: "No calendar URL configured.\n\nIn Outlook on the web: Settings → Calendar → Shared calendars → Publish a calendar, then copy the ICS link.\n\nPaste it as \"icsUrl\" in ~/.local/state/omarchy/settings/outlook-calendar.json (or re-run install.sh after deleting that file)."
           color: Qt.darker(root.bar.foreground, 1.4)
           font.family: root.bar.fontFamily
           font.pixelSize: Style.font.bodySmall

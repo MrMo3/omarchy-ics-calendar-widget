@@ -21,7 +21,9 @@ echo "Installed plugin to $DEST"
 
 if [[ ! -f "$SETTINGS" ]]; then
   mkdir -p "$(dirname "$SETTINGS")"
-  read -r -p "Paste your calendar's published .ics URL (or press Enter to set it later): " url
+  echo "You need your calendar's published .ics link (see the README: \"Getting your calendar URL\")."
+  read -r -p "Paste it here (or press Enter to set it later): " url
+  url="${url//\\/\\\\}"; url="${url//\"/\\\"}"   # escape backslashes/quotes so the JSON stays valid
   printf '{\n  "icsUrl": "%s"\n}\n' "$url" > "$SETTINGS"
   chmod 600 "$SETTINGS"   # the URL is effectively a password for your calendar
   echo "Saved URL to $SETTINGS"
