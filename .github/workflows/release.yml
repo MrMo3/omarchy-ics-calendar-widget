@@ -1,0 +1,39 @@
+# Publishes a GitHub release whenever the version in manifest.json changes on
+# main, using that version's section of CHANGELOG.md as the notes. A version
+# that already has a release is skipped, so unrelated pushes are a no-op.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: [manifest.json, CHANGELOG.md]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Publish release for manifest version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(jq -r .version manifest.json)
+          tag="v$version"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "$tag already released, nothing to do"
+            exit 0
+          fi
+          title=$(bash .github/release-notes.sh "$version" CHANGELOG.md "$RUNNER_TEMP/notes.md")
+          gh release create "$tag" --target "$GITHUB_SHA" --title "$title" \
+            --notes-file "$RUNNER_TEMP/notes.md" --latest
