@@ -482,20 +482,12 @@ function buildOccurrences(events, nowMs, horizonMs) {
       for (var s = 0; s < starts.length; s++) {
         var startMs = starts[s]
         if (exdateSet[startMs]) continue
-        var key = master.uid + "|" + startMs
-        var override = overrides[key]
-        if (override) {
-          if (override.status === "CANCELLED") continue
-          occurrences.push({
-            startMs: override.startMs, endMs: override.endMs, allDay: override.allDay,
-            summary: override.summary, location: override.location, uid: master.uid
-          })
-        } else {
-          occurrences.push({
-            startMs: startMs, endMs: startMs + duration, allDay: master.allDay,
-            summary: master.summary, location: master.location, uid: master.uid
-          })
-        }
+        // Overridden slots are emitted from the overrides loop below.
+        if (overrides[master.uid + "|" + startMs]) continue
+        occurrences.push({
+          startMs: startMs, endMs: startMs + duration, allDay: master.allDay,
+          summary: master.summary, location: master.location, uid: master.uid
+        })
       }
     } else {
       if (master.status === "CANCELLED") continue
@@ -505,6 +497,22 @@ function buildOccurrences(events, nowMs, horizonMs) {
           summary: master.summary, location: master.location, uid: master.uid
         })
       }
+    }
+  }
+
+  // A moved occurrence is placed by its own DTSTART, not its original slot:
+  // a meeting moved from yesterday to today has its RECURRENCE-ID outside
+  // the expansion range, so matching it from the master's expansion alone
+  // would drop it.
+  for (var k in overrides) {
+    if (occurrences.length >= MAX_OCCURRENCES) break
+    var ov = overrides[k]
+    if (ov.status === "CANCELLED") continue
+    if (ov.endMs >= rangeStart && ov.startMs <= horizonMs) {
+      occurrences.push({
+        startMs: ov.startMs, endMs: ov.endMs, allDay: ov.allDay,
+        summary: ov.summary, location: ov.location, uid: ov.uid
+      })
     }
   }
 
